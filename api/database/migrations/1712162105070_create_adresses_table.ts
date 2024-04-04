@@ -17,7 +17,8 @@ export default class extends BaseSchema {
       table.string('complement', 255)
       table.string('neighborhood', 255).notNullable()
       table.string('cep', 8).notNullable()
-      table.integer('city_id').unsigned().references('cities.id').onDelete('CASCADE').notNullable()
+      table.string('city', 255).notNullable()
+      table.string('uf', 2).notNullable()
     })
   }
 

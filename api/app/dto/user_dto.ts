@@ -1,23 +1,15 @@
 export class UserCreatedDto {
-  id: number
-  name: string
-  email: string
-
-  constructor(id: number, name: string, email: string) {
-    this.id = id
-    this.name = name
-    this.email = email
-  }
+  constructor(
+    public id: number,
+    public name: string,
+    public email: string
+  ) {}
 }
 
 export class UserToCreate {
-  password: string
-  name: string
-  email: string
-
-  constructor(password: string, name: string, email: string) {
-    this.password = password
-    this.name = name
-    this.email = email
-  }
+  constructor(
+    public password: string,
+    public name: string,
+    public email: string
+  ) {}
 }

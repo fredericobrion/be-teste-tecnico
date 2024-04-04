@@ -1,7 +1,6 @@
-import { ClientCreatedDto, ClientToCreate } from '../dto/client_dto.js'
+import { ClientCreatedDto, ClientToCreate, ClientToUpdate } from '../dto/client_dto.js'
 import Client from '../models/client.js'
 import { ServiceResponse } from '../types/service_response.js'
-import City from '../models/city.js'
 import Address from '../models/address.js'
 import Phone from '../models/phone.js'
 import db from '@adonisjs/lucid/services/db'
@@ -17,21 +16,9 @@ export default class ClientService {
       return { status: 'CONFLICT', data: { message: 'Email already registered' } }
     }
 
-    const cityInDb = await City.findBy('name', data.city)
-
     const clientCreated = new ClientCreatedDto(0, '', '', '', 0, '')
 
     await db.transaction(async (trx) => {
-      let cityId
-      if (!cityInDb) {
-        const city = new City()
-        city.name = data.city
-        city.uf = data.uf
-        city.useTransaction(trx)
-        const createdCity = await city.save()
-        cityId = createdCity.id
-      }
-
       const client = new Client()
       client.cpf = data.cpf
       client.email = data.email
@@ -41,12 +28,13 @@ export default class ClientService {
 
       const address = new Address()
       address.cep = data.cep
-      address.cityId = cityInDb ? cityInDb.id : cityId || 0
       address.complement = data.complement
       address.neighborhood = data.neighborhood
       address.number = data.number
       address.street = data.street
       address.clientId = client.id
+      address.city = data.city
+      address.uf = data.uf
       address.useTransaction(trx)
       await address.save()
 
@@ -87,5 +75,39 @@ export default class ClientService {
         )
       }),
     }
+  }
+
+  async updateClient(id: number, data: ClientToUpdate): Promise<ServiceResponse<ClientCreatedDto>> {
+    const client = await Client.findOrFail(id)
+
+    const clientInDbWithCpf = await Client.findBy('cpf', data.cpf)
+    if (clientInDbWithCpf && clientInDbWithCpf.id !== id) {
+      return { status: 'CONFLICT', data: { message: 'CPF already registered' } }
+    }
+
+    const clientInDbWithEmail = await Client.findBy('email', data.email)
+    if (clientInDbWithEmail && clientInDbWithEmail.id !== id) {
+      return { status: 'CONFLICT', data: { message: 'Email already registered' } }
+    }
+
+    // const address = await Address.findOrFail(client.id)
+    // const phone = await Phone.findOrFail(client.id)
+
+    // const clientData: Partial<Client> = {}
+    // const addressData: { [key: string]: string } = {}
+    // const phoneData: { phone: string } = {}
+
+    // for (const key in data) {
+    //   if (['name', 'cpf', 'email'].includes(key)) {
+    //     clientData[key] = data[key]
+    //   } else if (key === 'phone' && data[key]) {
+    //     phoneData.phone = data[key]
+    //   } else {
+    //     addressData[key] = data[key]
+    //   }
+    // }
+
+    // await db.transaction(async (trx) => {})
+    return { status: 'CONFLICT', data: { message: 'Not implemented yet' } }
   }
 }

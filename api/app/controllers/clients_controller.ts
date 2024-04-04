@@ -39,4 +39,31 @@ export default class ClientsController {
       return response.status(400).json({ error: error.message })
     }
   }
+
+  @inject()
+  async update({ request, response, params }: HttpContext, service: ClientService) {
+    const id = params.id
+    const data = request.only([
+      'id',
+      'name',
+      'email',
+      'cpf',
+      'cep',
+      'street',
+      'number',
+      'complement',
+      'neighborhood',
+      'city',
+      'uf',
+      'phone',
+    ])
+
+    try {
+      const serviceResponse = await service.updateClient(Number(id), data)
+
+      return response.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data)
+    } catch (error) {
+      return response.status(400).json({ error: error.message })
+    }
+  }
 }
