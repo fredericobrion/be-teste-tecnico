@@ -9,6 +9,7 @@ export default class extends BaseSchema {
       table
         .integer('client_id')
         .unsigned()
+        .unique()
         .references('clients.id')
         .onDelete('CASCADE')
         .notNullable()

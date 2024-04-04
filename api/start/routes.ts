@@ -8,7 +8,8 @@
 */
 
 import router from '@adonisjs/core/services/router'
-const RegisterController = () => import('../app/controllers/register_controller.js')
+const ClientsController = () => import('../app/controllers/clients_controller.js')
+const RegisterController = () => import('../app/controllers/user_controller.js')
 
 router.get('/', async () => {
   return {
@@ -17,3 +18,5 @@ router.get('/', async () => {
 })
 
 router.post('/register', [RegisterController, 'signup'])
+
+router.post('/clients', [ClientsController, 'store'])

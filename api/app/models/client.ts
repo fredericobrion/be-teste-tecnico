@@ -17,11 +17,11 @@ export default class Client extends BaseModel {
   @column()
   declare cpf: string
 
-  @hasOne(() => Address) // Change hasOne to belongsTo
+  @hasOne(() => Address)
   declare address: HasOne<typeof Address>
 
-  @hasMany(() => Phone)
-  declare phones: HasMany<typeof Phone>
+  @hasOne(() => Phone)
+  declare phones: HasOne<typeof Phone>
 
   @hasMany(() => Sale)
   declare sales: HasMany<typeof Sale>

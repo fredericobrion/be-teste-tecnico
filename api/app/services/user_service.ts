@@ -3,7 +3,7 @@ import User from '../models/user.js'
 import { UserCreatedDto, UserToCreate } from '../dto/user_dto.js'
 import { ServiceResponse } from '../types/service_response.js'
 
-export default class RegisterService {
+export default class UserService {
   async createUser(data: UserToCreate): Promise<ServiceResponse<UserCreatedDto>> {
     const userAlreadyExists = await User.findBy('email', data.email)
     if (userAlreadyExists) {

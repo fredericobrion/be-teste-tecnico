@@ -1,10 +1,10 @@
 // import type { HttpContext } from '@adonisjs/core/http'
 import { HttpContext } from '@adonisjs/core/http'
-import RegisterService from '../services/register_service.js'
+import RegisterService from '../services/user_service.js'
 import { inject } from '@adonisjs/core'
 import mapStatusHTTP from '../utils/map_status_http.js'
 
-export default class RegisterController {
+export default class UserController {
   @inject()
   async signup({ request, response }: HttpContext, service: RegisterService) {
     const data = request.only(['name', 'email', 'password'])

@@ -1,6 +1,5 @@
-import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
-import State from './state.js'
-import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
 import Address from './address.js'
 
 export default class City extends BaseModel {
@@ -11,10 +10,7 @@ export default class City extends BaseModel {
   declare name: string
 
   @column()
-  declare stateId: number
-
-  @belongsTo(() => State)
-  declare state: BelongsTo<typeof State>
+  declare uf: string
 
   @hasMany(() => Address)
   declare addresses: HasMany<typeof Address>
