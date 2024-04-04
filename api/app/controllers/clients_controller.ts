@@ -28,4 +28,15 @@ export default class ClientsController {
       return response.status(400).json({ error: error.message })
     }
   }
+
+  @inject()
+  async index({ response }: HttpContext, service: ClientService) {
+    try {
+      const serviceResponse = await service.getAllClients()
+
+      return response.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data)
+    } catch (error) {
+      return response.status(400).json({ error: error.message })
+    }
+  }
 }

@@ -19,4 +19,5 @@ router.get('/', async () => {
 
 router.post('/register', [RegisterController, 'signup'])
 
+router.get('/clients', [ClientsController, 'index'])
 router.post('/clients', [ClientsController, 'store'])

@@ -66,7 +66,26 @@ export default class ClientService {
     if (clientCreated.id !== 0) {
       return { status: 'CREATED', data: clientCreated }
     }
-
     return { status: 'INTERNAL_SERVER_ERROR', data: { message: 'Error creating client' } }
+  }
+
+  async getAllClients(): Promise<ServiceResponse<ClientCreatedDto[]>> {
+    const clients = await Client.query().preload('address').preload('phone')
+
+    const orderedClients = clients.sort((a, b) => a.id - b.id)
+
+    return {
+      status: 'OK',
+      data: orderedClients.map((client) => {
+        return new ClientCreatedDto(
+          client.id,
+          client.name,
+          client.email,
+          client.cpf,
+          client.address.id,
+          client.phone.number
+        )
+      }),
+    }
   }
 }
