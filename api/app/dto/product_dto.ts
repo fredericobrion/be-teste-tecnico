@@ -6,6 +6,15 @@ export class ProductToCreate {
   ) {}
 }
 
+export class ProductCreatedOrUpdated {
+  constructor(
+    public id: number,
+    public name: string,
+    public description: string,
+    public price: number
+  ) {}
+}
+
 export class ProductToUpdate {
   constructor(
     public name?: string,

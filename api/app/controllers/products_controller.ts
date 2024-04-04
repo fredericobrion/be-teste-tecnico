@@ -2,6 +2,7 @@ import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 import ProductService from '../services/products_service.js'
 import mapStatusHTTP from '../utils/map_status_http.js'
+import { createProductValidator, updateProductValidator } from '../validators/product.js'
 
 export default class ProductsController {
   @inject()
@@ -16,9 +17,9 @@ export default class ProductsController {
 
   @inject()
   async store({ request, response }: HttpContext, productService: ProductService) {
-    const data = request.only(['name', 'description', 'price'])
+    const payload = await request.validateUsing(createProductValidator)
     try {
-      const serviceResponse = await productService.createProduct(data)
+      const serviceResponse = await productService.createProduct(payload)
 
       return response.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data)
     } catch (error) {
@@ -38,9 +39,13 @@ export default class ProductsController {
 
   @inject()
   async update({ request, response, params }: HttpContext, productService: ProductService) {
-    const data = request.only(['name', 'description', 'price'])
+    const payload = await request.validateUsing(updateProductValidator)
+    if (Object.keys(payload).length === 0) {
+      return response.status(400).json({ error: 'At least one field must be filled' })
+    }
+
     try {
-      const serviceResponse = await productService.updateProduct(Number(params.id), data)
+      const serviceResponse = await productService.updateProduct(Number(params.id), payload)
       return response.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data)
     } catch (error) {
       return response.status(400).json({ error: error.message })
