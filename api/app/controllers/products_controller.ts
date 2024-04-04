@@ -25,4 +25,15 @@ export default class ProductsController {
       return response.status(400).json({ error: error.message })
     }
   }
+
+  @inject()
+  async update({ request, response, params }: HttpContext, productService: ProductService) {
+    const data = request.only(['name', 'description', 'price'])
+    try {
+      const serviceResponse = await productService.updateProduct(Number(params.id), data)
+      return response.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data)
+    } catch (error) {
+      return response.status(400).json({ error: error.message })
+    }
+  }
 }

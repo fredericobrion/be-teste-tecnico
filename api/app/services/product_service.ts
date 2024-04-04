@@ -1,4 +1,4 @@
-import { ProductToCreate } from '../dto/product_dto.js'
+import { ProductToCreate, ProductToUpdate } from '../dto/product_dto.js'
 import Product from '../models/product.js'
 import { ServiceResponse } from '../types/service_response.js'
 
@@ -19,6 +19,16 @@ export default class ProductService {
       return { status: 'NOT_FOUND', data: { message: 'Product not found' } }
     }
 
+    return { status: 'OK', data: product }
+  }
+
+  async updateProduct(id: number, data: ProductToUpdate): Promise<ServiceResponse<Product>> {
+    const product = await Product.find(id)
+    if (!product) {
+      return { status: 'NOT_FOUND', data: { message: 'Product not found' } }
+    }
+
+    await product.merge(data).save()
     return { status: 'OK', data: product }
   }
 }
