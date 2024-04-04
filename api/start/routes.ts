@@ -25,6 +25,12 @@ router.get('/clients', [ClientsController, 'index'])
 router.post('/clients', [ClientsController, 'store'])
 router.put('/clients/:id', [ClientsController, 'update'])
 
+router.get('/clients/:id/sales', [ClientsController, 'show'])
+// router.builder().params(['clientId']).qs(['month', 'year']).
+// router.builder().
+
+router.get('/clients/:id', [ClientsController, 'show'])
+
 router.post('/products', [ProductsController, 'store'])
 router.get('/products/:id', [ProductsController, 'show'])
 router.put('/products/:id', [ProductsController, 'update'])

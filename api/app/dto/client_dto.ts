@@ -1,3 +1,7 @@
+import { AddressClientDto } from './address_dto.js'
+import { PhoneClientDto } from './phone_dto.js'
+import { SalesClientDto } from './sale_dto.js'
+
 export class ClientToCreate {
   constructor(
     public name: string,
@@ -38,5 +42,17 @@ export class ClientToUpdate {
     public city?: string | null,
     public uf?: string | null,
     public phone?: string | null
+  ) {}
+}
+
+export class ClientWithSales {
+  constructor(
+    public id: number,
+    public name: string,
+    public email: string,
+    public cpf: string,
+    public address: AddressClientDto,
+    public phone: PhoneClientDto,
+    public sales: SalesClientDto[]
   ) {}
 }

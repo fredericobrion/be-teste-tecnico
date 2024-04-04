@@ -30,6 +30,20 @@ export default class ClientsController {
   }
 
   @inject()
+  async show({ response, params, request }: HttpContext, service: ClientService) {
+    const id = params.id
+    const { month, year } = request.qs() as unknown as { month: string; year: string }
+
+    try {
+      const serviceResponse = await service.getClientById(Number(id), Number(month), Number(year))
+
+      return response.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data)
+    } catch (error) {
+      return response.status(400).json({ error: error.message })
+    }
+  }
+
+  @inject()
   async index({ response }: HttpContext, service: ClientService) {
     try {
       const serviceResponse = await service.getAllClients()

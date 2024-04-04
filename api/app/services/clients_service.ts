@@ -1,9 +1,18 @@
-import { ClientCreatedDto, ClientToCreate, ClientToUpdate } from '../dto/client_dto.js'
+import {
+  ClientCreatedDto,
+  ClientToCreate,
+  ClientToUpdate,
+  ClientWithSales,
+} from '../dto/client_dto.js'
 import Client from '../models/client.js'
 import { ServiceResponse } from '../types/service_response.js'
 import Address from '../models/address.js'
 import Phone from '../models/phone.js'
 import db from '@adonisjs/lucid/services/db'
+import { AddressClientDto } from '../dto/address_dto.js'
+import { PhoneClientDto } from '../dto/phone_dto.js'
+import { SalesClientDto } from '../dto/sale_dto.js'
+import { DateTime } from 'luxon'
 
 export default class ClientService {
   async createClient(data: ClientToCreate): Promise<ServiceResponse<ClientCreatedDto>> {
@@ -109,5 +118,70 @@ export default class ClientService {
 
     // await db.transaction(async (trx) => {})
     return { status: 'CONFLICT', data: { message: 'Not implemented yet' } }
+  }
+
+  async getClientById(
+    id: number,
+    month?: number,
+    year?: number
+  ): Promise<ServiceResponse<ClientWithSales>> {
+    const client = await Client.query()
+      .where('id', id)
+      .preload('address')
+      .preload('phone')
+      .preload('sales')
+      .first()
+
+    if (!client) {
+      return { status: 'NOT_FOUND', data: { message: 'Client not found' } }
+    }
+
+    const filteredSales =
+      month && year
+        ? client.sales.filter((sale) => {
+            return Number(sale.createdAt.month) === month && Number(sale.createdAt.year) === year
+          })
+        : client.sales
+
+    const orderedSales = filteredSales.sort(
+      (a, b) => b.createdAt.toMillis() - a.createdAt.toMillis()
+    )
+
+    const clientAddress = new AddressClientDto(
+      client.address.street,
+      client.address.number,
+      client.address.complement,
+      client.address.neighborhood,
+      client.address.cep,
+      client.address.city,
+      client.address.uf
+    )
+
+    const clientPhone = new PhoneClientDto(client.phone.id, client.phone.number)
+
+    const clientSales = orderedSales.map((sale) => {
+      const dateTime = DateTime.fromISO(sale.createdAt.toISO() || '')
+      const formattedDateTime = dateTime.toFormat('dd/MM/yyyy HH:mm:ss')
+      return new SalesClientDto(
+        sale.id,
+        sale.productId,
+        sale.quantity,
+        sale.unitPrice,
+        sale.totalPrice,
+        formattedDateTime
+      )
+    })
+
+    const clientWithSales = new ClientWithSales(
+      client.id,
+      client.name,
+      client.email,
+      client.cpf,
+      clientAddress,
+      clientPhone,
+      clientSales
+    )
+
+    return { status: 'OK', data: clientWithSales }
   }
 }

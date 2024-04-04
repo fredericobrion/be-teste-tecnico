@@ -9,3 +9,14 @@ export class SaleCreated {
     public createdAt: string
   ) {}
 }
+
+export class SalesClientDto {
+  constructor(
+    public id: number,
+    public productId: number,
+    public quantity: number,
+    public unitPrice: number,
+    public totalPrice: number,
+    public createdAt: string
+  ) {}
+}

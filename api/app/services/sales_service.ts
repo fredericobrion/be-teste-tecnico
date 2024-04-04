@@ -12,7 +12,7 @@ export default class SaleService {
     quantity: number
   ): Promise<ServiceResponse<SaleCreated>> {
     const product = await Product.find(productId)
-    if (!product) {
+    if (!product || product.deletedAt !== null) {
       return { status: 'NOT_FOUND', data: { message: 'Product not found' } }
     }
 
