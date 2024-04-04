@@ -25,3 +25,4 @@ router.post('/clients', [ClientsController, 'store'])
 router.put('/clients/:id', [ClientsController, 'update'])
 
 router.post('/products', [ProductsController, 'store'])
+router.get('/products/:id', [ProductsController, 'index'])

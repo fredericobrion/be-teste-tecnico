@@ -12,4 +12,13 @@ export default class ProductService {
     const product = await Product.create(data)
     return { status: 'CREATED', data: product }
   }
+
+  async getProductById(id: number): Promise<ServiceResponse<Product>> {
+    const product = await Product.find(id)
+    if (!product) {
+      return { status: 'NOT_FOUND', data: { message: 'Product not found' } }
+    }
+
+    return { status: 'OK', data: product }
+  }
 }

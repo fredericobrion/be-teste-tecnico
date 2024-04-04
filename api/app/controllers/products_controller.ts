@@ -15,4 +15,14 @@ export default class ProductsController {
       return response.status(400).json({ error: error.message })
     }
   }
+
+  @inject()
+  async index({ response, params }: HttpContext, productService: ProductService) {
+    try {
+      const serviceResponse = await productService.getProductById(Number(params.id))
+      return response.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data)
+    } catch (error) {
+      return response.status(400).json({ error: error.message })
+    }
+  }
 }
