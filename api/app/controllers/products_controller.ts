@@ -46,4 +46,17 @@ export default class ProductsController {
       return response.status(400).json({ error: error.message })
     }
   }
+
+  @inject()
+  async delete({ response, params }: HttpContext, productService: ProductService) {
+    try {
+      const serviceResponse = await productService.deleteProduct(Number(params.id))
+      if (serviceResponse.status === 'NOT_FOUND') {
+        return response.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data)
+      }
+      return response.status(mapStatusHTTP(serviceResponse.status))
+    } catch (error) {
+      return response.status(400).json({ error: error.message })
+    }
+  }
 }

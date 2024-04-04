@@ -1,6 +1,11 @@
 type ServiceMessage = { message: string }
 
-type ServiceResponseErrorType = 'NOT_FOUND' | 'BAD_REQUEST' | 'INTERNAL_SERVER_ERROR' | 'CONFLICT'
+type ServiceResponseErrorType =
+  | 'NOT_FOUND'
+  | 'BAD_REQUEST'
+  | 'INTERNAL_SERVER_ERROR'
+  | 'CONFLICT'
+  | 'NO_CONTENT'
 
 type ServiceResponseError = {
   status: ServiceResponseErrorType
@@ -8,7 +13,7 @@ type ServiceResponseError = {
 }
 
 type ServiceResponseSuccess<T> = {
-  status: 'OK' | 'CREATED'
+  status: 'OK' | 'CREATED' | 'NO_CONTENT'
   data: T | T[]
 }
 

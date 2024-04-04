@@ -3,6 +3,7 @@ import Product from '../models/product.js'
 import Sale from '../models/sale.js'
 import { ServiceResponse } from '../types/service_response.js'
 import { SaleCreated } from '../dto/sale_dto.js'
+import { DateTime } from 'luxon'
 
 export default class SaleService {
   async createSale(
@@ -30,7 +31,8 @@ export default class SaleService {
       totalPrice,
     })
 
-    const date = sale.createdAt.toFormat('dd/MM/yyyy HH:mm:ss')
+    const dateTime = DateTime.fromISO(sale.createdAt?.toISO() || '')
+    const formattedDateTime = dateTime.toFormat('dd/MM/yyyy HH:mm:ss')
 
     const saleToReturn = new SaleCreated(
       sale.id,
@@ -39,7 +41,7 @@ export default class SaleService {
       sale.quantity,
       sale.unitPrice,
       sale.totalPrice,
-      date
+      formattedDateTime
     )
 
     return { status: 'CREATED', data: saleToReturn }
