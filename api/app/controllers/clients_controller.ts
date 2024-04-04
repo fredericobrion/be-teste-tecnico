@@ -35,7 +35,7 @@ export default class ClientsController {
     const { month, year } = request.qs() as unknown as { month: string; year: string }
 
     try {
-      const serviceResponse = await service.getClientById(Number(id), Number(month), Number(year))
+      const serviceResponse = await service.getClientById(Number(id), month, year)
 
       return response.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data)
     } catch (error) {
@@ -76,6 +76,23 @@ export default class ClientsController {
       const serviceResponse = await service.updateClient(Number(id), data)
 
       return response.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data)
+    } catch (error) {
+      return response.status(400).json({ error: error.message })
+    }
+  }
+
+  @inject()
+  async delete({ response, params }: HttpContext, service: ClientService) {
+    const id = params.id
+
+    try {
+      const serviceResponse = await service.deleteClient(Number(id))
+
+      if (serviceResponse.status === 'NOT_FOUND') {
+        return response.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data)
+      }
+
+      return response.status(mapStatusHTTP(serviceResponse.status))
     } catch (error) {
       return response.status(400).json({ error: error.message })
     }

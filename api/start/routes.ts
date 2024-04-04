@@ -24,12 +24,9 @@ router.post('/register', [RegisterController, 'signup'])
 router.get('/clients', [ClientsController, 'index'])
 router.post('/clients', [ClientsController, 'store'])
 router.put('/clients/:id', [ClientsController, 'update'])
-
 router.get('/clients/:id/sales', [ClientsController, 'show'])
-// router.builder().params(['clientId']).qs(['month', 'year']).
-// router.builder().
-
 router.get('/clients/:id', [ClientsController, 'show'])
+router.delete('/clients/:id', [ClientsController, 'delete'])
 
 router.post('/products', [ProductsController, 'store'])
 router.get('/products/:id', [ProductsController, 'show'])

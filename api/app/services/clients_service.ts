@@ -122,8 +122,8 @@ export default class ClientService {
 
   async getClientById(
     id: number,
-    month?: number,
-    year?: number
+    month?: string,
+    year?: string
   ): Promise<ServiceResponse<ClientWithSales>> {
     const client = await Client.query()
       .where('id', id)
@@ -139,7 +139,7 @@ export default class ClientService {
     const filteredSales =
       month && year
         ? client.sales.filter((sale) => {
-            return Number(sale.createdAt.month) === month && Number(sale.createdAt.year) === year
+            return sale.createdAt.month === Number(month) && sale.createdAt.year === Number(year)
           })
         : client.sales
 
@@ -183,5 +183,16 @@ export default class ClientService {
     )
 
     return { status: 'OK', data: clientWithSales }
+  }
+
+  async deleteClient(id: number): Promise<ServiceResponse<null | string>> {
+    const client = await Client.find(id)
+
+    if (!client) {
+      return { status: 'NOT_FOUND', data: { message: 'Client not found' } }
+    }
+
+    await client.delete()
+    return { status: 'NO_CONTENT', data: null }
   }
 }
