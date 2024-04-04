@@ -1,6 +1,6 @@
 // import type { HttpContext } from '@adonisjs/core/http'
 import { HttpContext } from '@adonisjs/core/http'
-import RegisterService from '../services/user_service.js'
+import RegisterService from '../services/users_service.js'
 import { inject } from '@adonisjs/core'
 import mapStatusHTTP from '../utils/map_status_http.js'
 

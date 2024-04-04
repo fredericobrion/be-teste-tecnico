@@ -8,6 +8,7 @@
 */
 
 import router from '@adonisjs/core/services/router'
+const SalesController = () => import('../app/controllers/sales_controller.js')
 const ProductsController = () => import('../app/controllers/products_controller.js')
 const ClientsController = () => import('../app/controllers/clients_controller.js')
 const RegisterController = () => import('../app/controllers/user_controller.js')
@@ -28,3 +29,5 @@ router.post('/products', [ProductsController, 'store'])
 router.get('/products/:id', [ProductsController, 'show'])
 router.put('/products/:id', [ProductsController, 'update'])
 router.get('/products', [ProductsController, 'index'])
+
+router.post('/sales/:clientId', [SalesController, 'store'])
