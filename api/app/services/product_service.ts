@@ -31,4 +31,12 @@ export default class ProductService {
     await product.merge(data).save()
     return { status: 'OK', data: product }
   }
+
+  async getAllProducts(): Promise<ServiceResponse<Product[]>> {
+    const products = await Product.all()
+
+    const sortedProducts = products.sort((a, b) => a.name.localeCompare(b.name))
+
+    return { status: 'OK', data: sortedProducts }
+  }
 }
