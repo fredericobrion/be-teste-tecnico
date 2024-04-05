@@ -9,7 +9,7 @@ export class ClientToCreate {
     public cpf: string,
     public street: string,
     public number: string,
-    public complement: string,
+    public complement: string | undefined,
     public neighborhood: string,
     public cep: string,
     public city: string,

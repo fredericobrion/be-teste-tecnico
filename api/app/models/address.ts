@@ -18,7 +18,7 @@ export default class Address extends BaseModel {
   declare number: string
 
   @column()
-  declare complement: string
+  declare complement: string | null
 
   @column()
   declare neighborhood: string

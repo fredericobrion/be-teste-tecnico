@@ -13,6 +13,7 @@ import { AddressClientDto } from '../dto/address_dto.js'
 import { PhoneClientDto } from '../dto/phone_dto.js'
 import { SalesClientDto } from '../dto/sale_dto.js'
 import { DateTime } from 'luxon'
+import FormatTransformer from '../utils/format_transformer.js'
 
 export default class ClientService {
   async createClient(data: ClientToCreate): Promise<ServiceResponse<ClientCreatedDto>> {
@@ -20,6 +21,7 @@ export default class ClientService {
     if (clientInDbWithCpf) {
       return { status: 'CONFLICT', data: { message: 'CPF already registered' } }
     }
+
     const clientInDbWithEmail = await Client.findBy('email', data.email)
     if (clientInDbWithEmail) {
       return { status: 'CONFLICT', data: { message: 'Email already registered' } }
@@ -29,15 +31,15 @@ export default class ClientService {
 
     await db.transaction(async (trx) => {
       const client = new Client()
-      client.cpf = data.cpf
+      client.cpf = FormatTransformer.unformatCpf(data.cpf)
       client.email = data.email
       client.name = data.name
       client.useTransaction(trx)
       await client.save()
 
       const address = new Address()
-      address.cep = data.cep
-      address.complement = data.complement
+      address.cep = FormatTransformer.unformatCep(data.cep)
+      address.complement = data.complement ?? null
       address.neighborhood = data.neighborhood
       address.number = data.number
       address.street = data.street
@@ -49,17 +51,18 @@ export default class ClientService {
 
       const phone = new Phone()
       phone.clientId = client.id
-      phone.number = data.phone
+      phone.number = FormatTransformer.unformatPhone(data.phone)
       phone.useTransaction(trx)
       await phone.save()
 
       clientCreated.id = client.id
       clientCreated.name = client.name
       clientCreated.email = client.email
-      clientCreated.cpf = client.cpf
+      clientCreated.cpf = FormatTransformer.formatCpf(client.cpf)
       clientCreated.addressId = address.id
-      clientCreated.phone = phone.number
+      clientCreated.phone = FormatTransformer.formatPhone(phone.number)
     })
+
     if (clientCreated.id !== 0) {
       return { status: 'CREATED', data: clientCreated }
     }
@@ -87,37 +90,57 @@ export default class ClientService {
   }
 
   async updateClient(id: number, data: ClientToUpdate): Promise<ServiceResponse<ClientCreatedDto>> {
-    const client = await Client.findOrFail(id)
-
-    const clientInDbWithCpf = await Client.findBy('cpf', data.cpf)
-    if (clientInDbWithCpf && clientInDbWithCpf.id !== id) {
-      return { status: 'CONFLICT', data: { message: 'CPF already registered' } }
+    const client = await Client.find(id)
+    if (!client) {
+      return { status: 'NOT_FOUND', data: { message: 'Client not found' } }
     }
 
-    const clientInDbWithEmail = await Client.findBy('email', data.email)
-    if (clientInDbWithEmail && clientInDbWithEmail.id !== id) {
-      return { status: 'CONFLICT', data: { message: 'Email already registered' } }
+    if ('cpf' in data) {
+      const clientInDbWithCpf = await Client.findBy('cpf', data.cpf)
+      if (clientInDbWithCpf && clientInDbWithCpf.id !== id) {
+        return { status: 'CONFLICT', data: { message: 'CPF already registered' } }
+      }
     }
 
-    // const address = await Address.findOrFail(client.id)
-    // const phone = await Phone.findOrFail(client.id)
+    if ('email' in data) {
+      const clientInDbWithEmail = await Client.findBy('email', data.email)
+      if (clientInDbWithEmail && clientInDbWithEmail.id !== id) {
+        return { status: 'CONFLICT', data: { message: 'Email already registered' } }
+      }
+    }
 
-    // const clientData: Partial<Client> = {}
-    // const addressData: { [key: string]: string } = {}
-    // const phoneData: { phone: string } = {}
+    const address = await Address.findOrFail(client.id)
+    const phone = await Phone.findOrFail(client.id)
 
-    // for (const key in data) {
-    //   if (['name', 'cpf', 'email'].includes(key)) {
-    //     clientData[key] = data[key]
-    //   } else if (key === 'phone' && data[key]) {
-    //     phoneData.phone = data[key]
-    //   } else {
-    //     addressData[key] = data[key]
-    //   }
-    // }
+    await db.transaction(async (trx) => {
+      client.useTransaction(trx)
+      address.useTransaction(trx)
+      phone.useTransaction(trx)
 
-    // await db.transaction(async (trx) => {})
-    return { status: 'CONFLICT', data: { message: 'Not implemented yet' } }
+      for (const key in data) {
+        if (['name', 'cpf', 'email'].includes(key)) {
+          await client.merge({ [key]: data[key] }).save()
+        } else if (key === 'phone' && data[key]) {
+          await phone.merge({ number: data[key]?.toString() }).save()
+        } else {
+          await address.merge({ [key]: data[key] }).save()
+        }
+      }
+    })
+
+    const clientUpdated = await Client.findOrFail(id)
+
+    return {
+      status: 'OK',
+      data: new ClientCreatedDto(
+        clientUpdated.id,
+        clientUpdated.name,
+        clientUpdated.email,
+        clientUpdated.cpf,
+        address.id,
+        phone.number
+      ),
+    }
   }
 
   async getClientById(

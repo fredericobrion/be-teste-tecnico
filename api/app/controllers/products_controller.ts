@@ -2,7 +2,7 @@ import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 import ProductService from '../services/products_service.js'
 import mapStatusHTTP from '../utils/map_status_http.js'
-import { createProductValidator, updateProductValidator } from '../validators/product.js'
+import { createProductValidator, updateProductValidator } from '../validators/products.js'
 
 export default class ProductsController {
   @inject()
