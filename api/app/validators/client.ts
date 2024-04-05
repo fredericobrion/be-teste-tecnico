@@ -44,7 +44,7 @@ export const updateClientValidator = vine.compile(
 
 export const monthAndYearValidator = vine.compile(
   vine.object({
-    month: vine.number().min(1).max(12),
-    year: vine.number().min(1900),
+    month: vine.number().min(1).max(12).optional(),
+    year: vine.number().min(1900).optional(),
   })
 )

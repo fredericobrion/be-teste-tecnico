@@ -109,8 +109,8 @@ export default class ClientService {
       }
     }
 
-    const address = await Address.findOrFail(client.id)
-    const phone = await Phone.findOrFail(client.id)
+    const address = await Address.findByOrFail('clientId', client.id)
+    const phone = await Phone.findByOrFail('clientId', client.id)
 
     await db.transaction(async (trx) => {
       client.useTransaction(trx)

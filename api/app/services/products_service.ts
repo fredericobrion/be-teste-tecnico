@@ -14,13 +14,20 @@ export default class ProductService {
     return { status: 'CREATED', data: product }
   }
 
-  async getProductById(id: number): Promise<ServiceResponse<Product>> {
+  async getProductById(id: number): Promise<ServiceResponse<ProductCreatedOrUpdated>> {
     const product = await Product.find(id)
     if (!product) {
       return { status: 'NOT_FOUND', data: { message: 'Product not found' } }
     }
 
-    return { status: 'OK', data: product }
+    const formattedProduct = new ProductCreatedOrUpdated(
+      product.id,
+      product.name,
+      product.description,
+      product.price
+    )
+
+    return { status: 'OK', data: formattedProduct }
   }
 
   async updateProduct(
