@@ -8,6 +8,7 @@
 */
 
 import router from '@adonisjs/core/services/router'
+import { middleware } from '../start/kernel.js'
 const SalesController = () => import('../app/controllers/sales_controller.js')
 const ProductsController = () => import('../app/controllers/products_controller.js')
 const ClientsController = () => import('../app/controllers/clients_controller.js')
@@ -21,17 +22,39 @@ router.get('/', async () => {
 
 router.post('/register', [RegisterController, 'signup'])
 
-router.get('/clients', [ClientsController, 'index'])
-router.post('/clients', [ClientsController, 'store'])
-router.put('/clients/:id', [ClientsController, 'update'])
-router.get('/clients/:id', [ClientsController, 'show'])
-router.get('/clients/:id/sales', [ClientsController, 'show'])
-router.delete('/clients/:id', [ClientsController, 'delete'])
+router.post('/login', [RegisterController, 'login'])
 
-router.post('/products', [ProductsController, 'store'])
-router.get('/products/:id', [ProductsController, 'show'])
-router.put('/products/:id', [ProductsController, 'update'])
-router.get('/products', [ProductsController, 'index'])
-router.delete('/products/:id', [ProductsController, 'delete'])
+// router.get('/clients', [ClientsController, 'index']).use(
+//   middleware.auth({
+//     guards: ['api'],
+//   })
+// )
 
-router.post('/sales/:clientId', [SalesController, 'store'])
+// router.post('/clients', [ClientsController, 'store'])
+// router.put('/clients/:id', [ClientsController, 'update'])
+// router.get('/clients/:id', [ClientsController, 'show'])
+// router.get('/clients/:id/sales', [ClientsController, 'show'])
+// router.delete('/clients/:id', [ClientsController, 'delete'])
+
+router.resource('/clients', ClientsController).middleware('*', middleware.auth({ guards: ['api'] }))
+router.get('/clients/:id/sales', [ClientsController, 'show']).use(
+  middleware.auth({
+    guards: ['api'],
+  })
+)
+
+router
+  .resource('/products', ProductsController)
+  .middleware('*', middleware.auth({ guards: ['api'] }))
+
+// router.post('/products', [ProductsController, 'store'])
+// router.get('/products/:id', [ProductsController, 'show'])
+// router.put('/products/:id', [ProductsController, 'update'])
+// router.get('/products', [ProductsController, 'index'])
+// router.delete('/products/:id', [ProductsController, 'delete'])
+
+router.post('/sales/:clientId', [SalesController, 'store']).use(
+  middleware.auth({
+    guards: ['api'],
+  })
+)

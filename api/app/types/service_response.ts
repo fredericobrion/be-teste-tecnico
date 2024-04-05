@@ -6,6 +6,7 @@ type ServiceResponseErrorType =
   | 'INTERNAL_SERVER_ERROR'
   | 'CONFLICT'
   | 'NO_CONTENT'
+  | 'UNAUTHORIZED'
 
 type ServiceResponseError = {
   status: ServiceResponseErrorType
@@ -13,7 +14,7 @@ type ServiceResponseError = {
 }
 
 type ServiceResponseSuccess<T> = {
-  status: 'OK' | 'CREATED' | 'NO_CONTENT'
+  status: 'OK' | 'CREATED' | 'NO_CONTENT' | 'UNAUTHORIZED'
   data: T | T[]
 }
 

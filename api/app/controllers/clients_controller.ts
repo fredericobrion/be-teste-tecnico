@@ -68,7 +68,7 @@ export default class ClientsController {
   }
 
   @inject()
-  async delete({ response, params }: HttpContext, service: ClientService) {
+  async destroy({ response, params }: HttpContext, service: ClientService) {
     const id = params.id
     await idValidator.validate({ id: id })
 

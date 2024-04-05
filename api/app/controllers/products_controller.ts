@@ -55,7 +55,7 @@ export default class ProductsController {
   }
 
   @inject()
-  async delete({ response, params }: HttpContext, productService: ProductService) {
+  async destroy({ response, params }: HttpContext, productService: ProductService) {
     await idValidator.validate({ id: params.id })
 
     try {

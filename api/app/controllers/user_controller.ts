@@ -17,4 +17,17 @@ export default class UserController {
       return response.status(400).json({ error: error.message })
     }
   }
+
+  @inject()
+  async login({ request, response }: HttpContext, service: UserService) {
+    const { email, password } = request.all()
+
+    try {
+      const serviceResponse = await service.login(email, password)
+
+      return response.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data)
+    } catch (error) {
+      return response.status(400).json({ error: error.message })
+    }
+  }
 }
