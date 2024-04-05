@@ -2,25 +2,17 @@ import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 import ClientService from '../services/clients_service.js'
 import mapStatusHTTP from '../utils/map_status_http.js'
-import { createClientValidator } from '../validators/clients.js'
+import {
+  createClientValidator,
+  updateClientValidator,
+  monthAndYearValidator,
+} from '../validators/client.js'
+import { idValidator } from '../validators/id.js'
 
 export default class ClientsController {
   @inject()
   async store({ request, response }: HttpContext, service: ClientService) {
     const payload = await request.validateUsing(createClientValidator)
-    // const data = request.only([
-    //   'name',
-    //   'email',
-    //   'cpf',
-    //   'cep',
-    //   'street',
-    //   'number',
-    //   'complement',
-    //   'neighborhood',
-    //   'city',
-    //   'uf',
-    //   'phone',
-    // ])
     try {
       const serviceResponse = await service.createClient(payload)
 
@@ -33,7 +25,9 @@ export default class ClientsController {
   @inject()
   async show({ response, params, request }: HttpContext, service: ClientService) {
     const id = params.id
+    await idValidator.validate({ id: id })
     const { month, year } = request.qs() as unknown as { month: string; year: string }
+    await monthAndYearValidator.validate({ month: month, year: year })
 
     try {
       const serviceResponse = await service.getClientById(Number(id), month, year)
@@ -58,23 +52,14 @@ export default class ClientsController {
   @inject()
   async update({ request, response, params }: HttpContext, service: ClientService) {
     const id = params.id
-    const data = request.only([
-      'id',
-      'name',
-      'email',
-      'cpf',
-      'cep',
-      'street',
-      'number',
-      'complement',
-      'neighborhood',
-      'city',
-      'uf',
-      'phone',
-    ])
+    await idValidator.validate({ id: id })
+    const payload = await request.validateUsing(updateClientValidator)
 
+    if (Object.keys(payload).length === 0) {
+      return response.status(400).json({ error: 'At least one field must be filled' })
+    }
     try {
-      const serviceResponse = await service.updateClient(Number(id), data)
+      const serviceResponse = await service.updateClient(Number(id), payload)
 
       return response.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data)
     } catch (error) {
@@ -85,6 +70,7 @@ export default class ClientsController {
   @inject()
   async delete({ response, params }: HttpContext, service: ClientService) {
     const id = params.id
+    await idValidator.validate({ id: id })
 
     try {
       const serviceResponse = await service.deleteClient(Number(id))

@@ -9,7 +9,8 @@ export default class SaleService {
   async createSale(
     clientId: number,
     productId: number,
-    quantity: number
+    quantity: number,
+    createdAt: Date | undefined
   ): Promise<ServiceResponse<SaleCreated>> {
     const product = await Product.find(productId)
     if (!product || product.deletedAt !== null) {
@@ -21,6 +22,8 @@ export default class SaleService {
       return { status: 'NOT_FOUND', data: { message: 'Client not found' } }
     }
 
+    const date = DateTime.fromISO(createdAt?.toISOString() ?? '')
+
     const totalPrice = product.price * quantity
 
     const sale = await Sale.create({
@@ -29,6 +32,7 @@ export default class SaleService {
       quantity,
       unitPrice: product.price,
       totalPrice,
+      createdAt: createdAt ? date : DateTime.now(),
     })
 
     const dateTime = DateTime.fromISO(sale.createdAt?.toISO() || '')
@@ -39,7 +43,7 @@ export default class SaleService {
       sale.clientId,
       sale.productId,
       sale.quantity,
-      sale.unitPrice,
+      Number(sale.unitPrice),
       sale.totalPrice,
       formattedDateTime
     )

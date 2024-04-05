@@ -45,7 +45,7 @@ export default class ClientService {
       address.street = data.street
       address.clientId = client.id
       address.city = data.city
-      address.uf = data.uf
+      address.uf = data.uf.toLocaleUpperCase()
       address.useTransaction(trx)
       await address.save()
 

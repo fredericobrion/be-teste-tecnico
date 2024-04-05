@@ -2,7 +2,8 @@ import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 import ProductService from '../services/products_service.js'
 import mapStatusHTTP from '../utils/map_status_http.js'
-import { createProductValidator, updateProductValidator } from '../validators/products.js'
+import { createProductValidator, updateProductValidator } from '../validators/product.js'
+import { idValidator } from '../validators/id.js'
 
 export default class ProductsController {
   @inject()
@@ -43,6 +44,7 @@ export default class ProductsController {
     if (Object.keys(payload).length === 0) {
       return response.status(400).json({ error: 'At least one field must be filled' })
     }
+    await idValidator.validate({ id: params.id })
 
     try {
       const serviceResponse = await productService.updateProduct(Number(params.id), payload)
@@ -54,6 +56,8 @@ export default class ProductsController {
 
   @inject()
   async delete({ response, params }: HttpContext, productService: ProductService) {
+    await idValidator.validate({ id: params.id })
+
     try {
       const serviceResponse = await productService.deleteProduct(Number(params.id))
       if (serviceResponse.status === 'NOT_FOUND') {

@@ -24,7 +24,7 @@ export default class Sale extends BaseModel {
   declare totalPrice: number
 
   @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime
+  declare createdAt: DateTime | undefined
 
   @belongsTo(() => Client)
   declare user: BelongsTo<typeof Client>
