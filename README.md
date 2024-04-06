@@ -26,14 +26,14 @@ Uma API RESTful que permite a um usuário logado realizar cadastros de clientes,
    ```
 
 3. Endpoint ```/clients``` para os clientes.
-   - ```GET /clients``` para listar os usuários.
+   - ```GET /clients``` para listar os clientes cadastrados.
    - ```GET /clients/:id``` para detalhar um cliente e vendas associadas a ele.
    - ```GET /clients/:id/filter?month=MM&year=YYYY``` para detalhar um cliente e filtrar as vendas por mês e ano.
      - Substitua ```MM``` por um valor entre ```1``` e ```12``` para selecionar o mês da venda.
      - Substitua ```YYYY``` por um valor maior do que ```1900``` para selecionar o ano da venda.
      - Caso queira filtrar apenas pelo mês, utilize o endpoint ```GET /clients/:id/filter?month=MM```
      - Caso queira filtrar apenas pelo ano, utilize o endpoint ```GET /clients/:id/filter?year=YYYY```
-   - ```POST /clients``` para adicionar um usuário.
+   - ```POST /clients``` para adicionar um cliente.
      - O corpo da requisição deverá ser no seguinte formato:
       ```
       {
@@ -51,3 +51,50 @@ Uma API RESTful que permite a um usuário logado realizar cadastros de clientes,
       }
       ```
       O campo ```complement``` é opcional.
+   - ```PUT /clients/:id``` para editar um cliente.
+     - O corpo da requisição deverá conter os dados que serão atualizados. Os campos disponíveis para atualização são os mesmo utilizados para criar um cliente.
+     - Exemplo: Caso queira atualizar o ```email```, a ```rua```, o ```bairro``` e o ```cep```, o corpo da requisição deverá ser:
+      ```
+      {
+      "email": "maria@gmail.com",
+      "street": "Rua B",
+      "neighborhood": "São Mateus",
+      "cep": "25894-589"
+      }
+      ```
+   - ```DELETE /clients/:id``` para excluir um cliente e as vendas associadas a ele.
+  
+4. Endpoint ```/products``` para os produtos.
+   - ```GET /products``` para listar os produtos cadastrados.
+   - ```GET /products/:id``` para detalhar um produto.
+   - ```POST /products``` para adicionar um produto.
+     - O corpo da requisição deverá ser no seguinte formato:
+       ```
+       {
+       "name": "O senhor dos anéis: A sociedade do anel",
+       "description": "O primeiro volume da aclamada triologia de J. R. R. Tolkien",
+       "price": 39.99
+       }
+       ```
+   - ```PUT /products/:id``` para editar um produto.
+     - O corpo da requisição deverá conter os dados que serão atualizados. Os campos disponíveis para atualização são os mesmo utilizados para criar um produto.
+     - Exemplo: Caso queira atualizar a ```descrição``` e ```preço```, o corpo da requisição deverá ser:
+     ```
+     {
+     "description": "O primeiro volume da aclamada triologia de John Ronald Reuel Tolkien",
+     "price": 29.99
+     }
+     ```
+   - ```DELETE /products/:id``` para excluir um produto.
+     
+5. Cadastro de uma venda através do endpoint ```POST /sales/:clientId```.
+   - O corpo da requisição deverá ser no seguinte formato:
+   ```
+   {
+   "productId": 1,
+   "quantity": 8,
+   "createdAt": "01/03/2024 12:00:00"
+   }
+   ```
+   O campo ```createdAt``` é opcional. Se não for especificado, a venda será registrada na data e horário da requisição.
+       
