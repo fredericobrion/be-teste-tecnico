@@ -4,6 +4,7 @@ import Sale from '../models/sale.js'
 import { ServiceResponse } from '../types/service_response.js'
 import { SaleCreated } from '../dto/sale_dto.js'
 import { DateTime } from 'luxon'
+import FormatTransformer from '../utils/format_transformer.js'
 
 export default class SaleService {
   async createSale(
@@ -12,17 +13,15 @@ export default class SaleService {
     quantity: number,
     createdAt: Date | undefined
   ): Promise<ServiceResponse<SaleCreated>> {
-    const product = await Product.find(productId)
-    if (!product || product.deletedAt !== null) {
-      return { status: 'NOT_FOUND', data: { message: 'Product not found' } }
+    const product = await Product.query().whereNull('deleted_at').where('id', productId).first()
+    if (!product) {
+      return { status: 'NOT_FOUND', data: { error: 'Product not found' } }
     }
 
     const client = await Client.find(clientId)
     if (!client) {
-      return { status: 'NOT_FOUND', data: { message: 'Client not found' } }
+      return { status: 'NOT_FOUND', data: { error: 'Client not found' } }
     }
-
-    const date = DateTime.fromISO(createdAt?.toISOString() ?? '')
 
     const totalPrice = product.price * quantity
 
@@ -32,11 +31,8 @@ export default class SaleService {
       quantity,
       unitPrice: product.price,
       totalPrice,
-      createdAt: createdAt ? date : DateTime.now(),
+      createdAt: createdAt ? DateTime.fromISO(createdAt?.toISOString()) : DateTime.now(),
     })
-
-    const dateTime = DateTime.fromISO(sale.createdAt?.toISO() || '')
-    const formattedDateTime = dateTime.toFormat('dd/MM/yyyy HH:mm:ss')
 
     const saleToReturn = new SaleCreated(
       sale.id,
@@ -45,7 +41,7 @@ export default class SaleService {
       sale.quantity,
       Number(sale.unitPrice),
       sale.totalPrice,
-      formattedDateTime
+      FormatTransformer.formatDate(sale.createdAt)
     )
 
     return { status: 'CREATED', data: saleToReturn }

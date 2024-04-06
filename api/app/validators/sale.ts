@@ -8,6 +8,7 @@ export const createSaleValidator = vine.compile(
       .date({
         formats: ['DD/MM/YYYY HH:mm:ss'],
       })
+      .beforeOrEqual('today')
       .optional(),
   })
 )

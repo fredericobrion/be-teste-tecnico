@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon'
+
 export default class FormatTransformer {
   static unformatCpf(cpf: string): string {
     return cpf.replace(/\D/g, '')
@@ -46,5 +48,12 @@ export default class FormatTransformer {
     const formatedPhone = `(${match[1]}) ${match[2]}-${match[3]}`
 
     return formatedPhone
+  }
+
+  static formatDate(date: DateTime): string {
+    const dateTime = DateTime.fromISO(date.toISO() || '')
+    const formattedDateTime = dateTime.toFormat('dd/MM/yyyy HH:mm:ss')
+
+    return formattedDateTime
   }
 }

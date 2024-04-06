@@ -1,4 +1,4 @@
-type ServiceMessage = { message: string }
+type ServiceMessage = { message?: string; error?: string }
 
 type ServiceResponseErrorType =
   | 'NOT_FOUND'

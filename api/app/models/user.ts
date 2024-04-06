@@ -23,6 +23,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare password: string
 
   static accessTokens = DbAccessTokensProvider.forModel(User, {
-    expiresIn: '3 hours',
+    expiresIn: '1 day',
   })
 }

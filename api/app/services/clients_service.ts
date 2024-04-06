@@ -19,12 +19,12 @@ export default class ClientService {
   async createClient(data: ClientToCreate): Promise<ServiceResponse<ClientCreatedDto>> {
     const clientInDbWithCpf = await Client.findBy('cpf', data.cpf)
     if (clientInDbWithCpf) {
-      return { status: 'CONFLICT', data: { message: 'CPF already registered' } }
+      return { status: 'CONFLICT', data: { error: 'CPF already registered' } }
     }
 
     const clientInDbWithEmail = await Client.findBy('email', data.email)
     if (clientInDbWithEmail) {
-      return { status: 'CONFLICT', data: { message: 'Email already registered' } }
+      return { status: 'CONFLICT', data: { error: 'Email already registered' } }
     }
 
     const clientCreated = new ClientCreatedDto(0, '', '', '', 0, '')
@@ -66,7 +66,7 @@ export default class ClientService {
     if (clientCreated.id !== 0) {
       return { status: 'CREATED', data: clientCreated }
     }
-    return { status: 'INTERNAL_SERVER_ERROR', data: { message: 'Error creating client' } }
+    return { status: 'INTERNAL_SERVER_ERROR', data: { error: 'Error creating client' } }
   }
 
   async getAllClients(): Promise<ServiceResponse<ClientCreatedDto[]>> {
@@ -74,38 +74,37 @@ export default class ClientService {
 
     const orderedClients = clients.sort((a, b) => a.id - b.id)
 
-    return {
-      status: 'OK',
-      data: orderedClients.map((client) => {
-        return new ClientCreatedDto(
-          client.id,
-          client.name,
-          client.email,
-          client.cpf,
-          client.address.id,
-          client.phone.number
-        )
-      }),
-    }
+    const clientsToReturn = orderedClients.map((client) => {
+      return new ClientCreatedDto(
+        client.id,
+        client.name,
+        client.email,
+        FormatTransformer.formatCpf(client.cpf),
+        client.address.id,
+        FormatTransformer.formatPhone(client.phone.number)
+      )
+    })
+
+    return { status: 'OK', data: clientsToReturn }
   }
 
   async updateClient(id: number, data: ClientToUpdate): Promise<ServiceResponse<ClientCreatedDto>> {
     const client = await Client.find(id)
     if (!client) {
-      return { status: 'NOT_FOUND', data: { message: 'Client not found' } }
+      return { status: 'NOT_FOUND', data: { error: 'Client not found' } }
     }
 
     if ('cpf' in data) {
       const clientInDbWithCpf = await Client.findBy('cpf', data.cpf)
       if (clientInDbWithCpf && clientInDbWithCpf.id !== id) {
-        return { status: 'CONFLICT', data: { message: 'CPF already registered' } }
+        return { status: 'CONFLICT', data: { error: 'CPF already registered' } }
       }
     }
 
     if ('email' in data) {
       const clientInDbWithEmail = await Client.findBy('email', data.email)
       if (clientInDbWithEmail && clientInDbWithEmail.id !== id) {
-        return { status: 'CONFLICT', data: { message: 'Email already registered' } }
+        return { status: 'CONFLICT', data: { error: 'Email already registered' } }
       }
     }
 
@@ -156,17 +155,18 @@ export default class ClientService {
       .first()
 
     if (!client) {
-      return { status: 'NOT_FOUND', data: { message: 'Client not found' } }
+      return { status: 'NOT_FOUND', data: { error: 'Client not found' } }
     }
 
-    const filteredSales =
-      month && year
-        ? client.sales.filter((sale) => {
-            return sale.createdAt.month === Number(month) && sale.createdAt.year === Number(year)
-          })
-        : client.sales
+    const filteredByMonth = month
+      ? client.sales.filter((sale) => sale.createdAt.month === Number(month))
+      : client.sales
 
-    const orderedSales = filteredSales.sort(
+    const filteredByYearAndMonth = year
+      ? filteredByMonth.filter((sale) => sale.createdAt.year === Number(year))
+      : filteredByMonth
+
+    const orderedSales = filteredByYearAndMonth.sort(
       (a, b) => b.createdAt.toMillis() - a.createdAt.toMillis()
     )
 
@@ -175,23 +175,24 @@ export default class ClientService {
       client.address.number,
       client.address.complement,
       client.address.neighborhood,
-      client.address.cep,
+      FormatTransformer.formatCep(client.address.cep),
       client.address.city,
-      client.address.uf
+      client.address.uf.toLocaleUpperCase()
     )
 
-    const clientPhone = new PhoneClientDto(client.phone.id, client.phone.number)
+    const clientPhone = new PhoneClientDto(
+      client.phone.id,
+      FormatTransformer.formatPhone(client.phone.number)
+    )
 
     const clientSales = orderedSales.map((sale) => {
-      const dateTime = DateTime.fromISO(sale.createdAt.toISO() || '')
-      const formattedDateTime = dateTime.toFormat('dd/MM/yyyy HH:mm:ss')
       return new SalesClientDto(
         sale.id,
         sale.productId,
-        sale.quantity,
-        sale.unitPrice,
-        sale.totalPrice,
-        formattedDateTime
+        Number(sale.quantity),
+        Number(sale.unitPrice),
+        Number(sale.totalPrice),
+        FormatTransformer.formatDate(sale.createdAt)
       )
     })
 
@@ -199,7 +200,7 @@ export default class ClientService {
       client.id,
       client.name,
       client.email,
-      client.cpf,
+      FormatTransformer.formatCpf(client.cpf),
       clientAddress,
       clientPhone,
       clientSales
@@ -212,7 +213,7 @@ export default class ClientService {
     const client = await Client.find(id)
 
     if (!client) {
-      return { status: 'NOT_FOUND', data: { message: 'Client not found' } }
+      return { status: 'NOT_FOUND', data: { error: 'Client not found' } }
     }
 
     await client.delete()
