@@ -14,7 +14,7 @@ export default class extends BaseSchema {
         .notNullable()
       table.string('street', 255).notNullable()
       table.string('number', 10).notNullable()
-      table.string('complement', 255)
+      table.string('complement', 255).defaultTo('')
       table.string('neighborhood', 255).notNullable()
       table.string('cep', 8).notNullable()
       table.string('city', 255).notNullable()

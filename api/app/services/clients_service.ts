@@ -12,7 +12,6 @@ import db from '@adonisjs/lucid/services/db'
 import { AddressClientDto } from '../dto/address_dto.js'
 import { PhoneClientDto } from '../dto/phone_dto.js'
 import { SalesClientDto } from '../dto/sale_dto.js'
-import { DateTime } from 'luxon'
 import FormatTransformer from '../utils/format_transformer.js'
 
 export default class ClientService {
@@ -39,7 +38,7 @@ export default class ClientService {
 
       const address = new Address()
       address.cep = FormatTransformer.unformatCep(data.cep)
-      address.complement = data.complement ?? null
+      address.complement = data.complement ?? ''
       address.neighborhood = data.neighborhood
       address.number = data.number
       address.street = data.street
@@ -63,10 +62,7 @@ export default class ClientService {
       clientCreated.phone = FormatTransformer.formatPhone(phone.number)
     })
 
-    if (clientCreated.id !== 0) {
-      return { status: 'CREATED', data: clientCreated }
-    }
-    return { status: 'INTERNAL_SERVER_ERROR', data: { error: 'Error creating client' } }
+    return { status: 'CREATED', data: clientCreated }
   }
 
   async getAllClients(): Promise<ServiceResponse<ClientCreatedDto[]>> {
@@ -118,28 +114,27 @@ export default class ClientService {
 
       for (const key in data) {
         if (['name', 'cpf', 'email'].includes(key)) {
-          await client.merge({ [key]: data[key] }).save()
+          await client.merge({ [key]: data[key as keyof ClientToUpdate] }).save()
         } else if (key === 'phone' && data[key]) {
           await phone.merge({ number: data[key]?.toString() }).save()
         } else {
-          await address.merge({ [key]: data[key] }).save()
+          await address.merge({ [key]: data[key as keyof ClientToUpdate] }).save()
         }
       }
     })
 
     const clientUpdated = await Client.findOrFail(id)
 
-    return {
-      status: 'OK',
-      data: new ClientCreatedDto(
-        clientUpdated.id,
-        clientUpdated.name,
-        clientUpdated.email,
-        clientUpdated.cpf,
-        address.id,
-        phone.number
-      ),
-    }
+    const clientToReturn = new ClientCreatedDto(
+      clientUpdated.id,
+      clientUpdated.name,
+      clientUpdated.email,
+      clientUpdated.cpf,
+      address.id,
+      phone.number
+    )
+
+    return { status: 'OK', data: clientToReturn }
   }
 
   async getClientById(

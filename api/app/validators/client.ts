@@ -1,5 +1,5 @@
 import vine from '@vinejs/vine'
-import { ufs } from '../utils/uf_list.js'
+import { UF_LIST } from '../utils/uf_list.js'
 
 export const createClientValidator = vine.compile(
   vine.object({
@@ -12,7 +12,7 @@ export const createClientValidator = vine.compile(
     complement: vine.string().optional(),
     neighborhood: vine.string(),
     city: vine.string(),
-    uf: vine.string().toUpperCase().in(ufs),
+    uf: vine.string().toUpperCase().in(UF_LIST),
     phone: vine.string().regex(/^\(\d{2}\) \d{4,5}-\d{4}$/),
   })
 )
@@ -34,7 +34,7 @@ export const updateClientValidator = vine.compile(
     complement: vine.string().optional(),
     neighborhood: vine.string().optional(),
     city: vine.string().optional(),
-    uf: vine.string().toUpperCase().in(ufs).optional(),
+    uf: vine.string().toUpperCase().in(UF_LIST).optional(),
     phone: vine
       .string()
       .regex(/^\(\d{2}\) \d{4,5}-\d{4}$/)

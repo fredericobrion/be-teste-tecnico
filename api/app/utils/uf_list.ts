@@ -1,4 +1,4 @@
-export const ufs = [
+export const UF_LIST = [
   'AC',
   'AL',
   'AP',
