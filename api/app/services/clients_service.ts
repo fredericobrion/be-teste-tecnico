@@ -62,6 +62,8 @@ export default class ClientService {
       clientCreated.phone = FormatTransformer.formatPhone(phone.number)
     })
 
+    console.log(clientCreated)
+
     return { status: 'CREATED', data: clientCreated }
   }
 
