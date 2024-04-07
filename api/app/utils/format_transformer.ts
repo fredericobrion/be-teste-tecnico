@@ -38,7 +38,6 @@ export default class FormatTransformer {
   }
 
   static formatPhone(phone: string): string {
-    console.log(phone)
     const match = phone.match(/^(\d{2})(\d{4,5})(\d{4})$/)
 
     if (!match) {

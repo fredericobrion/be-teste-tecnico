@@ -34,7 +34,7 @@ export default class ClientService {
       client.email = data.email
       client.name = data.name
       client.useTransaction(trx)
-      await client.save()
+      const savedClient = await client.save()
 
       const address = new Address()
       address.cep = FormatTransformer.unformatCep(data.cep)
@@ -46,7 +46,7 @@ export default class ClientService {
       address.city = data.city
       address.uf = data.uf.toLocaleUpperCase()
       address.useTransaction(trx)
-      await address.save()
+      const savedAddress = await address.save()
 
       const phone = new Phone()
       phone.clientId = client.id
@@ -54,15 +54,13 @@ export default class ClientService {
       phone.useTransaction(trx)
       await phone.save()
 
-      clientCreated.id = client.id
+      clientCreated.id = savedClient.id
       clientCreated.name = client.name
       clientCreated.email = client.email
       clientCreated.cpf = FormatTransformer.formatCpf(client.cpf)
-      clientCreated.addressId = address.id
+      clientCreated.addressId = savedAddress.id
       clientCreated.phone = FormatTransformer.formatPhone(phone.number)
     })
-
-    console.log(clientCreated)
 
     return { status: 'CREATED', data: clientCreated }
   }
@@ -92,19 +90,26 @@ export default class ClientService {
       return { status: 'NOT_FOUND', data: { error: 'Client not found' } }
     }
 
-    if ('cpf' in data) {
+    if (data.cpf) {
+      data.cpf = FormatTransformer.unformatCpf(data.cpf)
       const clientInDbWithCpf = await Client.findBy('cpf', data.cpf)
       if (clientInDbWithCpf && clientInDbWithCpf.id !== id) {
         return { status: 'CONFLICT', data: { error: 'CPF already registered' } }
       }
     }
 
-    if ('email' in data) {
+    if (data.email) {
       const clientInDbWithEmail = await Client.findBy('email', data.email)
       if (clientInDbWithEmail && clientInDbWithEmail.id !== id) {
         return { status: 'CONFLICT', data: { error: 'Email already registered' } }
       }
     }
+
+    if (data.phone) {
+      data.phone = FormatTransformer.unformatPhone(data.phone)
+    }
+
+    if (data.cep) data.cep = FormatTransformer.unformatCep(data.cep)
 
     const address = await Address.findByOrFail('clientId', client.id)
     const phone = await Phone.findByOrFail('clientId', client.id)
@@ -131,9 +136,9 @@ export default class ClientService {
       clientUpdated.id,
       clientUpdated.name,
       clientUpdated.email,
-      clientUpdated.cpf,
+      FormatTransformer.formatCpf(clientUpdated.cpf),
       address.id,
-      phone.number
+      FormatTransformer.formatPhone(phone.number)
     )
 
     return { status: 'OK', data: clientToReturn }

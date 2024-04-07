@@ -7,6 +7,7 @@ import { SaleFactory } from './sale_factory.js'
 export const ClientFactory = factory
   .define(Client, async ({ faker }) => {
     return {
+      id: faker.number.int({ min: 1, max: 100 }),
       name: faker.person.fullName(),
       email: faker.internet.email(),
       cpf: faker.string.numeric({ length: 11, allowLeadingZeros: true }),
