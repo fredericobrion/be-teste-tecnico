@@ -10,7 +10,6 @@ import Address from '../models/address.js'
 import Phone from '../models/phone.js'
 import db from '@adonisjs/lucid/services/db'
 import { AddressClientDto } from '../dto/address_dto.js'
-import { PhoneClientDto } from '../dto/phone_dto.js'
 import { SalesClientDto } from '../dto/sale_dto.js'
 import FormatTransformer from '../utils/format_transformer.js'
 
@@ -182,11 +181,6 @@ export default class ClientService {
       client.address.uf.toLocaleUpperCase()
     )
 
-    const clientPhone = new PhoneClientDto(
-      client.phone.id,
-      FormatTransformer.formatPhone(client.phone.number)
-    )
-
     const clientSales = orderedSales.map((sale) => {
       return new SalesClientDto(
         sale.id,
@@ -204,7 +198,7 @@ export default class ClientService {
       client.email,
       FormatTransformer.formatCpf(client.cpf),
       clientAddress,
-      clientPhone,
+      FormatTransformer.formatPhone(client.phone.number),
       clientSales
     )
 

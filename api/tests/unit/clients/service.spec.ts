@@ -12,7 +12,6 @@ import { ClientCreatedDto, ClientWithSales } from '../../../app/dto/client_dto.j
 import { ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 import { DateTime } from 'luxon'
 import { AddressClientDto } from '../../../app/dto/address_dto.js'
-import { PhoneClientDto } from '../../../app/dto/phone_dto.js'
 
 test.group('Clients service', () => {
   test('cpf already registered', async ({ assert }) => {
@@ -287,11 +286,6 @@ test.group('Clients service', () => {
       mockedClient.address.uf.toLocaleUpperCase()
     )
 
-    const clientPhone = new PhoneClientDto(
-      mockedClient.phone.id,
-      FormatTransformer.formatPhone(mockedClient.phone.number)
-    )
-
     const clientSales = mockedClient.sales.map((sale) => {
       return {
         id: sale.id,
@@ -309,7 +303,7 @@ test.group('Clients service', () => {
       mockedClient.email,
       FormatTransformer.formatCpf(mockedClient.cpf),
       clientAddress,
-      clientPhone,
+      FormatTransformer.formatPhone(mockedClient.phone.number),
       clientSales
     )
 

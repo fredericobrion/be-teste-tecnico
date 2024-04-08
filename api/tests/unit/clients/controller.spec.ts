@@ -7,7 +7,6 @@ import { ClientFactory } from '../../../database/factories/client_factory.js'
 import { HttpContext } from '@adonisjs/core/http'
 import { AddressClientDto } from '../../../app/dto/address_dto.js'
 import FormatTransformer from '../../../app/utils/format_transformer.js'
-import { PhoneClientDto } from '../../../app/dto/phone_dto.js'
 import { SalesClientDto } from '../../../app/dto/sale_dto.js'
 import { DateTime } from 'luxon'
 
@@ -356,7 +355,7 @@ test.group('Clients controller', () => {
 
   test('client not found when searching by id', async ({ assert }) => {
     class FakeService extends ClientService {
-      async updateClient(_id: number): Promise<ServiceResponse<ClientCreatedDto>> {
+      async getClientById(_id: number): Promise<ServiceResponse<ClientWithSales>> {
         return {
           status: 'NOT_FOUND',
           data: { error: 'Client not found' },
@@ -415,11 +414,6 @@ test.group('Clients controller', () => {
 
     mockedClient.sales[0].createdAt = DateTime.now()
 
-    const clientPhone = new PhoneClientDto(
-      mockedClient.phone.id,
-      FormatTransformer.formatPhone(mockedClient.phone.number)
-    )
-
     const clientSales = mockedClient.sales.map((sale) => {
       return new SalesClientDto(
         sale.id,
@@ -437,7 +431,7 @@ test.group('Clients controller', () => {
       mockedClient.email,
       FormatTransformer.formatCpf(mockedClient.cpf),
       clientAddress,
-      clientPhone,
+      FormatTransformer.formatPhone(mockedClient.phone.number),
       clientSales
     )
 

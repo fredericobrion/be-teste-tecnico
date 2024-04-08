@@ -1,5 +1,4 @@
 import { AddressClientDto } from './address_dto.js'
-import { PhoneClientDto } from './phone_dto.js'
 import { SalesClientDto } from './sale_dto.js'
 
 export class ClientToCreate {
@@ -52,7 +51,7 @@ export class ClientWithSales {
     public email: string,
     public cpf: string,
     public address: AddressClientDto,
-    public phone: PhoneClientDto,
+    public phone: string,
     public sales: SalesClientDto[]
   ) {}
 }
