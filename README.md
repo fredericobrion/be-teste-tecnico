@@ -1,9 +1,19 @@
 # Teste técnico Be - Back-End
 
-## Descrição:
+## 📝 Descrição:
 Uma API RESTful que permite a um usuário logado realizar cadastros de clientes, produtos e vendas. Após o login, o usuário recebe um token de autenticação. Esse token deve ser incluído no cabeçalho da requisição, utilizando o campo Authorization e o formato 'Bearer TOKEN', para executar operações relacionadas a clientes, produtos e vendas.
 
-## Iniciando a aplicação:
+## 💻 Tecnologias utilizadas:
+- <a href="https://www.typescriptlang.org/" target="_blank">TypeScript</a>
+- <a href="https://nodejs.org/en" target="_blank">NodeJS</a>
+- <a href="https://adonisjs.com/" target="_blank">AdonisJS</a>
+- <a href="https://www.mysql.com/">MySQL</a>
+- <a href="https://lucid.adonisjs.com/docs/introduction" target="_blank">Lucid</a>
+- <a href="https://vinejs.dev/docs/introduction" target="_blank">VineJs</a>
+- <a href="https://japa.dev/docs/introduction" target="_blank">Japa</a>
+- <a href="https://sinonjs.org/" target="_blank">Sinon.JS</a>
+
+## ⚙️ Iniciando a aplicação:
 1. Clone o repositório e acesse o diretório da aplicação:
    ```
    git clone git@github.com:fredericobrion/be-teste-tecnico.git && cd be-teste-tecnico
@@ -26,10 +36,10 @@ Uma API RESTful que permite a um usuário logado realizar cadastros de clientes,
    npm start
    ```
 
-## Testes
+## 🧪 Testes
 A aplicação possui testes unitários para as camadas de Service e Controller. Para executar os testes, esteja no diretório ```api``` e rode o comando ```npm run test```
 
-## Funcionalidades
+## 🗺️ Funcionalidades
 1. Cadastro de um usuário através do endpoint ```POST /register```.
   - O corpo da requisição deverá ser no seguinte formato:
     ```
