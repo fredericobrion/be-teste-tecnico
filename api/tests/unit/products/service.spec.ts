@@ -53,7 +53,7 @@ test.group('Products service', () => {
     assert.deepEqual(response.data, mockedProduct)
   }).cleanup(() => Sinon.restore())
 
-  test('product not found', async ({ assert }) => {
+  test('product not found when gettig by id', async ({ assert }) => {
     const productService = new ProductService()
 
     Sinon.stub(Product, 'query').returns({
@@ -96,7 +96,7 @@ test.group('Products service', () => {
     assert.deepEqual(response.data, expectedProduct)
   }).cleanup(() => Sinon.restore())
 
-  test('product not found', async ({ assert }) => {
+  test('product not found when updating', async ({ assert }) => {
     const productService = new ProductService()
 
     Sinon.stub(Product, 'query').returns({
@@ -171,7 +171,7 @@ test.group('Products service', () => {
     assert.deepEqual(response.data, expectedProducts)
   }).cleanup(() => Sinon.restore())
 
-  test('product not found', async ({ assert }) => {
+  test('product not found when deleting', async ({ assert }) => {
     const productService = new ProductService()
 
     Sinon.stub(Product, 'query').returns({

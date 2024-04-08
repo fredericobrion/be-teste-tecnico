@@ -7,6 +7,23 @@ import { UserCreatedDto } from '../../../app/dto/user_dto.js'
 import { AccessToken } from '@adonisjs/auth/access_tokens'
 
 test.group('Users service', () => {
+  test('email already registered', async ({ assert }) => {
+    const mockedUser = await UserFactory.makeStubbed()
+
+    const userService = new UserService()
+
+    Sinon.stub(User, 'findBy').resolves(mockedUser)
+
+    const response = await userService.createUser({
+      name: mockedUser.name,
+      email: mockedUser.email,
+      password: mockedUser.password,
+    })
+
+    assert.equal(response.status, 'CONFLICT')
+    assert.deepEqual(response.data, { error: 'User already registered' })
+  }).cleanup(() => Sinon.restore())
+
   test('create user', async ({ assert }) => {
     const mockedUser = await UserFactory.makeStubbed()
 
@@ -30,23 +47,6 @@ test.group('Users service', () => {
 
     assert.equal(response.status, 'CREATED')
     assert.deepEqual(response.data, userCreated)
-  }).cleanup(() => Sinon.restore())
-
-  test('email already registered', async ({ assert }) => {
-    const mockedUser = await UserFactory.makeStubbed()
-
-    const userService = new UserService()
-
-    Sinon.stub(User, 'findBy').resolves(mockedUser)
-
-    const response = await userService.createUser({
-      name: mockedUser.name,
-      email: mockedUser.email,
-      password: mockedUser.password,
-    })
-
-    assert.equal(response.status, 'CONFLICT')
-    assert.deepEqual(response.data, { error: 'User already registered' })
   }).cleanup(() => Sinon.restore())
 
   test('login', async ({ assert }) => {
