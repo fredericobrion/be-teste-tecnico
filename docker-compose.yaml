@@ -1,32 +1,12 @@
 version: '3'
 
 services:
-  api:
-    build: ./api
-    ports:
-      - "3333:3333"
-    volumes:
-      - ./api:/app
-    depends_on:
-      - db
-    networks:
-      - mynetwork
-    env_file:
-      - ./api/.env
-    environment:
-      - DB_HOST=db
-
-  db:
-    container_name: mysql_database
-    image: mysql:8.0.23
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=adonis_db
-    networks:
-      - mynetwork
-
-networks:
-  mynetwork:
-    driver: bridge
+    db:
+      container_name: mysql_database
+      image: mysql:8.0.23
+      ports:
+        - 3306:3306
+      restart: always
+      environment:
+        MYSQL_ROOT_PASSWORD: password
+        MYSQL_DATABASE: adonis_db
