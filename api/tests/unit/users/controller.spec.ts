@@ -2,7 +2,6 @@ import { test } from '@japa/runner'
 import UserService from '../../../app/services/user_service.js'
 import { UserCreatedDto, UserToCreate } from '../../../app/dto/user_dto.js'
 import { ServiceResponse } from '../../../app/types/service_response.js'
-import app from '@adonisjs/core/services/app'
 import UsersController from '../../../app/controllers/users_controller.js'
 import { HttpContext } from '@adonisjs/core/http'
 import { AccessToken } from '@adonisjs/auth/access_tokens'
@@ -17,10 +16,6 @@ test.group('Users controller', () => {
         }
       }
     }
-
-    app.container.swap(UserService, () => {
-      return new FakeService()
-    })
 
     const data = {
       name: 'maria',
@@ -72,10 +67,6 @@ test.group('Users controller', () => {
       }
     }
 
-    app.container.swap(UserService, () => {
-      return new FakeService()
-    })
-
     const controller = new UsersController()
 
     const response = await controller.signup(
@@ -114,10 +105,6 @@ test.group('Users controller', () => {
         }
       }
     }
-
-    app.container.swap(UserService, () => {
-      return new FakeService()
-    })
 
     const controller = new UsersController()
 

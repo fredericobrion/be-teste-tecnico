@@ -6,6 +6,16 @@ import { ServiceResponse } from '../../app/types/service_response.js'
 import app from '@adonisjs/core/services/app'
 
 test.group('Users', () => {
+  test('register without all fields', async ({ client }) => {
+    const response = await client.post('/register').form({
+      nam: 'joao',
+      email: 'joao@email.com',
+      password: '123456',
+    })
+
+    response.assertStatus(422)
+  })
+
   test('email already registered', async ({ client }) => {
     class FakeService extends UserService {
       async createUser(_data: UserToCreate): Promise<ServiceResponse<UserCreatedDto>> {

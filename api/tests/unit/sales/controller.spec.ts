@@ -21,10 +21,6 @@ test.group('Sales controller', () => {
       }
     }
 
-    app.container.swap(SaleService, () => {
-      return new FakeService()
-    })
-
     const controller = new SalesController()
 
     const response = await controller.store(
@@ -64,10 +60,6 @@ test.group('Sales controller', () => {
         return { status: 'NOT_FOUND', data: { error: 'Client not found' } }
       }
     }
-
-    app.container.swap(SaleService, () => {
-      return new FakeService()
-    })
 
     const controller = new SalesController()
 
@@ -121,10 +113,6 @@ test.group('Sales controller', () => {
         }
       }
     }
-
-    app.container.swap(SaleService, () => {
-      return new FakeService()
-    })
 
     const controller = new SalesController()
 

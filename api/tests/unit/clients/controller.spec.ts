@@ -2,7 +2,6 @@ import { test } from '@japa/runner'
 import ClientService from '../../../app/services/client_service.js'
 import ClientsController from '../../../app/controllers/clients_controller.js'
 import { ServiceResponse } from '../../../app/types/service_response.js'
-import app from '@adonisjs/core/services/app'
 import { ClientCreatedDto, ClientWithSales } from '../../../app/dto/client_dto.js'
 import { ClientFactory } from '../../../database/factories/client_factory.js'
 import { HttpContext } from '@adonisjs/core/http'
@@ -22,10 +21,6 @@ test.group('Clients controller', () => {
         }
       }
     }
-
-    app.container.swap(ClientService, () => {
-      return new FakeService()
-    })
 
     const data = await ClientFactory.with('address').with('phone').makeStubbed()
 
@@ -65,10 +60,6 @@ test.group('Clients controller', () => {
         }
       }
     }
-
-    app.container.swap(ClientService, () => {
-      return new FakeService()
-    })
 
     const data = await ClientFactory.with('address').with('phone').makeStubbed()
 
@@ -120,10 +111,6 @@ test.group('Clients controller', () => {
       }
     }
 
-    app.container.swap(ClientService, () => {
-      return new FakeService()
-    })
-
     const controller = new ClientsController()
 
     const response = await controller.store(
@@ -174,10 +161,6 @@ test.group('Clients controller', () => {
       }
     }
 
-    app.container.swap(ClientService, () => {
-      return new FakeService()
-    })
-
     const controller = new ClientsController()
 
     const response = await controller.index(
@@ -211,10 +194,6 @@ test.group('Clients controller', () => {
         }
       }
     }
-
-    app.container.swap(ClientService, () => {
-      return new FakeService()
-    })
 
     const data = await ClientFactory.with('address').with('phone').makeStubbed()
 
@@ -256,10 +235,6 @@ test.group('Clients controller', () => {
       }
     }
 
-    app.container.swap(ClientService, () => {
-      return new FakeService()
-    })
-
     const data = await ClientFactory.with('address').with('phone').makeStubbed()
 
     const controller = new ClientsController()
@@ -299,10 +274,6 @@ test.group('Clients controller', () => {
         }
       }
     }
-
-    app.container.swap(ClientService, () => {
-      return new FakeService()
-    })
 
     const data = await ClientFactory.with('address').with('phone').makeStubbed()
 
@@ -355,10 +326,6 @@ test.group('Clients controller', () => {
       }
     }
 
-    app.container.swap(ClientService, () => {
-      return new FakeService()
-    })
-
     const controller = new ClientsController()
 
     const response = await controller.update(
@@ -396,10 +363,6 @@ test.group('Clients controller', () => {
         }
       }
     }
-
-    app.container.swap(ClientService, () => {
-      return new FakeService()
-    })
 
     const controller = new ClientsController()
 
@@ -487,10 +450,6 @@ test.group('Clients controller', () => {
       }
     }
 
-    app.container.swap(ClientService, () => {
-      return new FakeService()
-    })
-
     const controller = new ClientsController()
 
     const response = await controller.show(
@@ -533,10 +492,6 @@ test.group('Clients controller', () => {
         }
       }
     }
-
-    app.container.swap(ClientService, () => {
-      return new FakeService()
-    })
 
     const controller = new ClientsController()
 

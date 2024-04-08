@@ -2,7 +2,6 @@ import { test } from '@japa/runner'
 import ProductService from '../../../app/services/product_service.js'
 import ProductsController from '../../../app/controllers/products_controller.js'
 import { ServiceResponse } from '../../../app/types/service_response.js'
-import app from '@adonisjs/core/services/app'
 import { HttpContext } from '@adonisjs/core/http'
 import { ProductCreatedOrUpdated } from '../../../app/dto/product_dto.js'
 
@@ -16,10 +15,6 @@ test.group('Products controller', () => {
         }
       }
     }
-
-    app.container.swap(ProductService, () => {
-      return new FakeService()
-    })
 
     const data = {
       name: 'product',
@@ -71,10 +66,6 @@ test.group('Products controller', () => {
       }
     }
 
-    app.container.swap(ProductService, () => {
-      return new FakeService()
-    })
-
     const controller = new ProductsController()
 
     const response = await controller.store(
@@ -111,10 +102,6 @@ test.group('Products controller', () => {
         }
       }
     }
-
-    app.container.swap(ProductService, () => {
-      return new FakeService()
-    })
 
     const controller = new ProductsController()
 
@@ -158,10 +145,6 @@ test.group('Products controller', () => {
       }
     }
 
-    app.container.swap(ProductService, () => {
-      return new FakeService()
-    })
-
     const controller = new ProductsController()
 
     const response = await controller.show(
@@ -196,10 +179,6 @@ test.group('Products controller', () => {
         }
       }
     }
-
-    app.container.swap(ProductService, () => {
-      return new FakeService()
-    })
 
     const controller = new ProductsController()
 
@@ -249,10 +228,6 @@ test.group('Products controller', () => {
         }
       }
     }
-
-    app.container.swap(ProductService, () => {
-      return new FakeService()
-    })
 
     const controller = new ProductsController()
 
@@ -305,10 +280,6 @@ test.group('Products controller', () => {
       }
     }
 
-    app.container.swap(ProductService, () => {
-      return new FakeService()
-    })
-
     const controller = new ProductsController()
 
     const response = await controller.index(
@@ -342,10 +313,6 @@ test.group('Products controller', () => {
         }
       }
     }
-
-    app.container.swap(ProductService, () => {
-      return new FakeService()
-    })
 
     const controller = new ProductsController()
 
