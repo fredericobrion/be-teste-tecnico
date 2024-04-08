@@ -30,7 +30,7 @@ Inicialmente, a aplicação foi concebida para que tanto o banco de dados quanto
    ```
 
 ## Testes
-A aplicação possui testes unitários para as camadas de Service. Para executar os testes, esteja no diretório ```api``` e rode o comando ```npm run test```
+A aplicação possui testes unitários para as camadas de Service e Controller. Para executar os testes, esteja no diretório ```api``` e rode o comando ```npm run test```
 
 ## Funcionalidades
 1. Cadastro de um usuário através do endpoint ```POST /register```.
