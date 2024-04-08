@@ -14,7 +14,7 @@ const ProductsController = () => import('../app/controllers/products_controller.
 const ClientsController = () => import('../app/controllers/clients_controller.js')
 const RegisterController = () => import('../app/controllers/users_controller.js')
 
-router.post('/register', [RegisterController, 'signup'])
+router.post('/signup', [RegisterController, 'signup'])
 
 router.post('/login', [RegisterController, 'login'])
 
