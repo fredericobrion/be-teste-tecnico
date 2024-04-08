@@ -3,28 +3,25 @@
 ## Descrição:
 Uma API RESTful que permite a um usuário logado realizar cadastros de clientes, produtos e vendas. Após o login, o usuário recebe um token de autenticação. Esse token deve ser incluído no cabeçalho da requisição, utilizando o campo Authorization e o formato 'Bearer TOKEN', para executar operações relacionadas a clientes, produtos e vendas.
 
-## Dificuldades no desenvolvimento:
-Inicialmente, a aplicação foi concebida para que tanto o banco de dados quanto o servidor funcionassem em containers, mas encontrei dificuldades ao tentar estabelecer a conexão com o banco de dados dessa maneira.
-
 ## Iniciando a aplicação:
-1. Clone o repositório e entre no diretório da aplicação:
+1. Clone o repositório e acesse o diretório da aplicação:
    ```
    git clone git@github.com:fredericobrion/be-teste-tecnico.git && cd be-teste-tecnico
    ```
-2. Entre no diretório da aplicação e crie o arquivo ```.env``` contendo as variáveis de ambiente.
+2. Certifique-se de ter um servidor MySQL ativo. Se não tiver, você pode iniciar um utilizando Docker com o comando:
+   ```
+   docker-compose up -d --build
+   ```
+3. Navegue até o diretório da aplicação e crie o arquivo ```.env``` para as variáveis de ambiente:
    ```
    cd api && touch .env
    ```
    Preencha o arquivo ```.env``` de acordo com o modelo do arquivo ```.env.example```
-3. Instale as dependências:
+4. Instale as dependências:
    ```
    npm install
    ```
-4. Caso não possua um servidor MYSQL rodando em sua máquina, inicie um utilizando o Docker:
-   ```
-   cd .. && docker-compose up -d --build
-   ```
-5. No diretório ```api``` inicie a aplicação:
+5. Verifique o status do banco de dados e inicie a aplicação:
    ```
    npm start
    ```
