@@ -5,8 +5,9 @@
   "type": "module",
   "license": "UNLICENSED",
   "scripts": {
-    "start": "node bin/server.js",
+    "start": "npm run db:create && node ace serve",
     "build": "node ace build",
+    "db:create": "node ace migration:run",
     "dev": "node ace serve --watch",
     "test": "node ace test",
     "lint": "eslint .",
