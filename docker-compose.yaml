@@ -11,6 +11,20 @@ services:
       - db
     networks:
       - mynetwork
+    env_file:
+      - ./api/.env
+    # environment:
+    #   - TZ=UTC
+    #   - PORT=3333
+    #   - HOST=0.0.0.0
+    #   - LOG_LEVEL=info
+    #   - APP_KEY=HI5Ufq-iU3WCDpr6502ubpCSVM5k9vvI
+    #   - NODE_ENV=development
+    #   - DB_HOST=db
+    #   - DB_PORT=3306
+    #   - DB_USER=root
+    #   - DB_PASSWORD=password
+    #   - DB_DATABASE=adonis_db
 
   db:
     container_name: mysql_database

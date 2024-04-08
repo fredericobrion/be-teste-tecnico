@@ -10,4 +10,4 @@ RUN npm install
 
 COPY . .
 
-CMD ["node", "ace", "serve", "--watch"]
+CMD ["npm", "start"]
