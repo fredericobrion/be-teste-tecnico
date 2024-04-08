@@ -4,6 +4,7 @@ import { UserFactory } from '../../../database/factories/user_factory.js'
 import Sinon from 'sinon'
 import User from '../../../app/models/user.js'
 import { UserCreatedDto } from '../../../app/dto/user_dto.js'
+import { AccessToken } from '@adonisjs/auth/access_tokens'
 
 test.group('Users service', () => {
   test('create user', async ({ assert }) => {
@@ -14,13 +15,18 @@ test.group('Users service', () => {
     Sinon.stub(User, 'findBy').resolves(null)
     Sinon.stub(User, 'create').resolves(mockedUser)
 
+    const token = { token: 'token' } as unknown as AccessToken
+    Sinon.stub(User, 'accessTokens').value({
+      create: async () => token,
+    })
+
     const response = await userService.createUser({
       name: mockedUser.name,
       email: mockedUser.email,
       password: mockedUser.password,
     })
 
-    const userCreated = new UserCreatedDto(mockedUser.id, mockedUser.name, mockedUser.email)
+    const userCreated = new UserCreatedDto(mockedUser.id, mockedUser.name, mockedUser.email, token)
 
     assert.equal(response.status, 'CREATED')
     assert.deepEqual(response.data, userCreated)

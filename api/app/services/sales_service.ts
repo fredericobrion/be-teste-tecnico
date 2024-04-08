@@ -34,8 +34,6 @@ export default class SaleService {
       createdAt: createdAt ? DateTime.fromISO(createdAt?.toISOString()) : DateTime.now(),
     })
 
-    console.log('DATA CRIADA', sale.createdAt)
-
     const saleToReturn = new SaleCreated(
       sale.id,
       sale.clientId,

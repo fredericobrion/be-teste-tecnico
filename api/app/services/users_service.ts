@@ -12,7 +12,9 @@ export default class UserService {
 
     const user = await User.create(data)
 
-    const createdUser = new UserCreatedDto(user.id, user.name, user.email)
+    const token = await User.accessTokens.create(user)
+
+    const createdUser = new UserCreatedDto(user.id, user.name, user.email, token)
 
     return { status: 'CREATED', data: createdUser }
   }
