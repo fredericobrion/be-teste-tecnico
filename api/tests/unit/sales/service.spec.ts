@@ -1,5 +1,5 @@
 import { test } from '@japa/runner'
-import SaleService from '../../../app/services/sales_service.js'
+import SaleService from '../../../app/services/sale_service.js'
 import { SaleFactory } from '../../../database/factories/sale_factory.js'
 import { ProductFactory } from '../../../database/factories/product_factory.js'
 import { ClientFactory } from '../../../database/factories/client_factory.js'

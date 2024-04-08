@@ -1,5 +1,5 @@
 import { test } from '@japa/runner'
-import UserService from '../../../app/services/users_service.js'
+import UserService from '../../../app/services/user_service.js'
 import { UserFactory } from '../../../database/factories/user_factory.js'
 import Sinon from 'sinon'
 import User from '../../../app/models/user.js'

@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
-import ClientService from '../services/clients_service.js'
+import ClientService from '../services/client_service.js'
 import mapStatusHTTP from '../utils/map_status_http.js'
 import {
   createClientValidator,

@@ -1,9 +1,9 @@
 import { test } from '@japa/runner'
-import UserService from '../../../app/services/users_service.js'
+import UserService from '../../../app/services/user_service.js'
 import { UserCreatedDto, UserToCreate } from '../../../app/dto/user_dto.js'
 import { ServiceResponse } from '../../../app/types/service_response.js'
 import app from '@adonisjs/core/services/app'
-import UserController from '../../../app/controllers/user_controller.js'
+import UsersController from '../../../app/controllers/users_controller.js'
 import { HttpContext } from '@adonisjs/core/http'
 import { AccessToken } from '@adonisjs/auth/access_tokens'
 
@@ -28,7 +28,7 @@ test.group('Users controller', () => {
       password: '123456',
     }
 
-    const controller = new UserController()
+    const controller = new UsersController()
 
     const response = await controller.signup(
       {
@@ -76,7 +76,7 @@ test.group('Users controller', () => {
       return new FakeService()
     })
 
-    const controller = new UserController()
+    const controller = new UsersController()
 
     const response = await controller.signup(
       {
@@ -119,7 +119,7 @@ test.group('Users controller', () => {
       return new FakeService()
     })
 
-    const controller = new UserController()
+    const controller = new UsersController()
 
     const response = await controller.login(
       {

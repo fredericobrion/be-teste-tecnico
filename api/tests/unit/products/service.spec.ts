@@ -1,5 +1,5 @@
 import { test } from '@japa/runner'
-import ProductService from '../../../app/services/products_service.js'
+import ProductService from '../../../app/services/product_service.js'
 import { ProductFactory } from '../../../database/factories/product_factory.js'
 import Product from '../../../app/models/product.js'
 import Sinon from 'sinon'

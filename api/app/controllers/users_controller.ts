@@ -1,10 +1,10 @@
 import { HttpContext } from '@adonisjs/core/http'
-import UserService from '../services/users_service.js'
+import UserService from '../services/user_service.js'
 import { inject } from '@adonisjs/core'
 import mapStatusHTTP from '../utils/map_status_http.js'
 import { createUserValidator, loginValidator } from '../validators/user.js'
 
-export default class UserController {
+export default class UsersController {
   @inject()
   async signup({ request, response }: HttpContext, service: UserService) {
     const payload = await request.validateUsing(createUserValidator)

@@ -1,5 +1,5 @@
 import { test } from '@japa/runner'
-import ClientsService from '../../../app/services/clients_service.js'
+import ClientsService from '../../../app/services/client_service.js'
 import { ClientFactory } from '../../../database/factories/client_factory.js'
 import Client from '../../../app/models/client.js'
 import Address from '../../../app/models/address.js'

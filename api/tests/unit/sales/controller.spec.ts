@@ -1,5 +1,5 @@
 import { test } from '@japa/runner'
-import SaleService from '../../../app/services/sales_service.js'
+import SaleService from '../../../app/services/sale_service.js'
 import SalesController from '../../../app/controllers/sales_controller.js'
 import { ServiceResponse } from '../../../app/types/service_response.js'
 import app from '@adonisjs/core/services/app'
