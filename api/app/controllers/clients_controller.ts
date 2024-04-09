@@ -32,8 +32,6 @@ export default class ClientsController {
     try {
       const serviceResponse = await service.getClientById(Number(id), month, year)
 
-      console.log(serviceResponse)
-
       return response.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data)
     } catch (error) {
       return response.status(400).json({ error: error.message })
