@@ -40,7 +40,7 @@ Uma API RESTful que permite a um usuário logado realizar cadastros de clientes,
 A aplicação possui testes unitários para as camadas de Service e Controller. Para executar os testes, esteja no diretório ```api``` e rode o comando ```npm run test```
 
 ## 🗺️ Funcionalidades
-1. Cadastro de um usuário através do endpoint ```POST /register```.
+1. Cadastro de um usuário através do endpoint ```POST /signup```.
   - O corpo da requisição deverá ser no seguinte formato:
     ```
     {
